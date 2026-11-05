@@ -13,7 +13,7 @@ import time
 import json
 from collections import deque
 
-LIB_DIR = "/Workspace/Users/ritik69ritik@gmail.com/Cricbuzz ETL Pipeline"
+LIB_DIR = "/Workspace/Users/ritik69ritik@gmail.com/Criclane"
 if LIB_DIR not in sys.path:
     sys.path.insert(0, LIB_DIR)
 import criclane_lib as cl

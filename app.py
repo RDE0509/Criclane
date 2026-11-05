@@ -41,12 +41,22 @@ def get_client():
 @st.cache_data(ttl=5, show_spinner=False)
 def q(sql: str):
     w = get_client()
-    res = w.statement_execution.execute_statement(
-        statement=sql, warehouse_id=WAREHOUSE_ID, wait_timeout="30s"
-    )
-    state = getattr(res.status.state, "value", res.status.state)
-    if state != "SUCCEEDED" or not res.manifest or not res.result:
+    try:
+        res = w.statement_execution.execute_statement(
+            statement=sql, warehouse_id=WAREHOUSE_ID, wait_timeout="30s"
+        )
+    except Exception as e:
+        st.session_state["q_error"] = repr(e)[:300]
         return []
+    state = getattr(res.status.state, "value", res.status.state)
+    if state != "SUCCEEDED":
+        err = getattr(res.status, "error", None)
+        st.session_state["q_error"] = str(getattr(err, "message", None) or state)[:300]
+        return []
+    if not res.manifest or not res.result:
+        st.session_state.pop("q_error", None)
+        return []
+    st.session_state.pop("q_error", None)
     cols = [c.name for c in res.manifest.schema.columns]
     out = []
     for r in res.result.data_array or []:
@@ -267,6 +277,9 @@ st.markdown(f"""
       </div>
     </div>
 """, unsafe_allow_html=True)
+
+if st.session_state.get("q_error"):
+    st.error(f"Data query failed: {st.session_state['q_error']}")
 
 matches = get_matches()
 minis = get_miniscores()

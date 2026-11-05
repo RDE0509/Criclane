@@ -1,0 +1,16 @@
+services:
+  cricket-dashboard:
+    build: .
+    container_name: cricket-dashboard
+    expose:
+      - "8501"
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - cricket-dashboard

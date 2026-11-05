@@ -1,0 +1,11 @@
+# Replace with your real domain — Caddy will get you a free Let's Encrypt
+# certificate automatically the first time it starts.
+your-domain.com {
+    reverse_proxy cricket-dashboard:8501
+}
+
+# No domain yet / just testing on a VPS's IP? Use this instead and visit
+# the server's IP over plain HTTP:
+:80 {
+    reverse_proxy host.docker.internal:8501
+}

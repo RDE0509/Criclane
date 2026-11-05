@@ -1,0 +1,6 @@
+command: ['streamlit', 'run', 'app.py']
+env:
+- name: 'CRICLANE_WAREHOUSE_ID'
+  value: 'a01e8fceeb00f98a'
+- name: 'STREAMLIT_GATHER_USAGE_STATS'
+  value: 'false'
